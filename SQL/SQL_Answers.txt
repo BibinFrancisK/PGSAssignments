@@ -1,0 +1,213 @@
+https://www.uvm.edu/~kdk/demobld.sql
+
+
+1. CREATE TABLE Customer (
+	  2  Customerid NUMBER(5),
+	  3  CustomerName NUMBER(20),
+	  4  Address1 VARCHAR2(20),
+	  5  Address2 VARCHAR2(20)
+	  6  );
+   
+2. ALTER TABLE Customer MODIFY CustomerName VARCHAR2(20) NOT NULL;
+
+3. ALTER TABLE Customer ADD(
+	  2  Sex VARCHAR2(1),
+	  3  Age NUMBER(2),
+	  4  PhoneNo NUMBER(10),
+	  5  Income NUMBER(10, 2)
+	  6  );
+	  
+4. INSERT INTO Customer VALUES(1001, 'Allan', '#115 Chicago','#115 Chicago', 'M', 25, 7878776, 10000);
+   INSERT INTO Customer VALUES(1002, 'George', '#116 France','#116 France', 'M', 25, 434524, 20000);
+   INSERT INTO Customer VALUES(1003, 'Becker', '#114 New York','#114 New York', 'M', 45, 431525, 15000.50);
+
+5. ALTER TABLE Customer MODIFY CustomerId NUMBER(5) CONSTRAINT Custid_Prim PRIMARY KEY;
+
+6. INSERT INTO Customer VALUES(1002, 'John', '#114 Chicago','#114 Chicago', 'M', 45, 431525, 19000.00);
+	ERROR at line 1:
+	ORA-00001: unique constraint (SYS.CUSTID_PRIM) violated
+
+7.  ALTER TABLE Customer DROP CONSTRAINT Custid_Prim;
+	INSERT INTO Customer VALUES(1002, 'Becker', '#114 New York','#114 New York', 'M', 45, 431525, 15000.50);
+	INSERT INTO Customer VALUES(1003, 'Nanapatekar', '#115 India','#114 New York', 'M', 45, 431525, 20000.50);
+
+8. TRUNCATE TABLE Customer;
+
+9. ALTER TABLE Customer RENAME COLUMN Income TO Grossincome;
+
+10. CREATE TABLE Suppliers
+	  2  (
+	  3  SupplID NUMBER(5),
+	  4  SName VARCHAR2(20) NOT NULL,
+	  5  Addr1 VARCHAR2(20),
+	  6  Addr2 VARCHAR2(20),
+	  7  Contactno number (10)
+	  8  );
+
+11. CREATE TABLE Transactions
+	  2  (
+	  3  CustomerID NUMBER(5),
+	  4  CustomerName VARCHAR2(10),
+	  5  Debit NUMBER(10,2),
+	  6  Credit NUMBER(10,2),
+	  7  Balance NUMBER(10,2) NOT NULL,
+	  8  TransactionDate DATE
+	  9  );
+
+	INSERT INTO Transactions VALUES (1000, 'Allen', 3000, 2000, 1000, '10 Oct 92');
+	INSERT INTO Transactions VALUES (1001, 'George', 6000, 2000, 4000, '08 Oct 92');
+	INSERT INTO Transactions VALUES (1002, 'Becker', 10000, 2000, 8000, '04 Nov 92');
+	INSERT INTO Transactions VALUES (1003, 'Bob', 20000, 2000, 280000, '4 Oct 92');
+
+12. ALTER TABLE Transactions ADD CONSTRAINT credit_chk CHECK (Credit <= (Debit + Balance));
+
+13. ALTER TABLE Transactions ADD CONSTRAINT Balan_Check CHECK (Balance > 500);
+
+14.CREATE VIEW Trans_View AS
+	  2  SELECT
+	  3  CustomerId AS accountId,
+	  4  CustomerName AS AccountHolderName,
+	  5  Debit,
+	  6  Credit,
+	  7  Balance
+	  8  FROM Transactions;
+####################################	  
+	  
+15. SELECT dname FROM dept WHERE deptno = 
+		(SELECT deptno FROM emp WHERE sal = 
+				(SELECT MAX(sal) FROM emp));
+
+16. CREATE SEQUENCE Seq_Dept
+		INCREMENT BY 10
+		START WITH 40
+		MAXVALUE 200;
+		
+17. INSERT INTO Dept VALUES (Seq_Dept.NEXTVAL, 'New Dep 1', 'Loc A'); 
+	INSERT INTO Dept VALUES (Seq_Dept.NEXTVAL, 'New Dep 2', 'Loc B'); 
+	INSERT INTO Dept VALUES (Seq_Dept.NEXTVAL, 'New Dep 3', 'Loc C'); 
+
+18. SELECT Ename, Sal, Comm, Deptno 
+		FROM emp 
+			WHERE deptno IN (20, 30, 40);
+
+19. SELECT Empno AS EmployeeNumber, Ename AS EmployeeName, 
+		Job AS Job, Mgr AS Manager, Hiredate AS HiredDate,
+			Sal AS Salary, Comm AS Commission, Deptno AS DepartmentNumber
+				FROM emp;
+
+20. SELECT d.Dname, d.Loc, COUNT(*)  AS NumberOfPeople, AVG(e.sal) AS AverageSalary FROM Dept d
+		JOIN Emp e ON d.deptno = e.deptno
+			GROUP BY (d.dname, d.Loc);
+
+
+21. SELECT * FROM emp
+		WHERE Job IN ('CLERK', 'SALESMAN');
+		
+22. 
+
+
+23. SELECT Ename, Job FROM emp
+		WHERE Hiredate < '01-Jan-82';
+		
+		
+########################
+PL/ SQL
+
+1. 
+declare
+	num1 number := &num1;
+	num2 number := &num2;
+	sum number;
+	diff number;
+	pdt number;
+	quo number;
+begin
+	sum:=num1+num2;
+	diff:=num1-num2;
+	pdt:=num1*num2;
+	quo:=num1/num2;
+	dbms_output.put_line('Sum:' ||sum|| ' Diff:' || diff);
+	dbms_output.put_line('Pdt: ' ||pdt|| ' Quo: '|| quo);
+end;
+
+2. 
+	declare
+		v_empno number := &eno;
+		v_sal number;
+		v_grade salgrade.grade%type;
+	begin
+		select sal into v_sal from emp where empno = v_empno;
+		select grade into v_grade from salgrade where v_sal between losal and hisal;
+		dbms_output.put_line('Grade of employee: ' || v_grade);
+	end;
+	
+3. 
+	declare
+		v_empname varchar2(30) := '&emname';
+		nRecordEmp emp%rowtype;
+		nRecordDept dept%rowtype;
+	begin
+		select * into nRecordEmp from emp where ename = v_empname;
+		select * into nRecordDept from dept where nRecordEmp.deptno = deptno;
+		dbms_output.put_line('Empno: ' || nRecordEmp.empno || ' Name: ' || nRecordEmp.ename || ' Job: ' || nRecordEmp.job || ' Deptname: ' || nRecordDept.dname);
+	end;
+
+
+4. 
+	declare
+		nRecord dept%rowtype;
+	begin
+		select * into nRecord from dept where deptno=10;
+		dbms_output.put_line('Deptno: ' || nRecord.deptno || ' Name: ' || nRecord.dname || ' Loc: ' ||  nRecord.loc);
+	end;
+		
+
+5.
+	declare
+		v_count number;
+	begin
+		select count(*) into v_count from emp where hiredate between '01-JAN-80' and '01-DEC-81';
+		dbms_output.put_line('No. of employees: ' || v_count);
+	end;
+	
+6. 
+	declare
+		v_deptno emp.deptno%type := &dpno;
+		v_ename emp.ename%type;
+		v_job emp.job%type;
+		cursor e_cursor is 
+			select ename, job from emp where deptno = v_deptno;	
+	begin
+		open e_cursor;
+		loop
+		 fetch e_cursor into v_ename, v_job;
+		 exit when e_cursor%notfound;
+		 dbms_output.put_line('Name: ' ||v_ename || ' Job: ' || v_job);
+		end loop;
+		close e_cursor;
+	end;
+		
+
+	
+	
+		
+		
+		
+
+########################
+Notes:
+SQL> SELECT tname FROM tab;
+
+TRANS_VIEW
+DEPT
+EMP
+BONUS
+SALGRADE
+DUMMY
+
+set pagesize 100
+set linesize 100
+set serveroutput on
+
+TNS: Transfer Network Subscript
+tnsnames.ora contains hostname, prt_number, SID etc.

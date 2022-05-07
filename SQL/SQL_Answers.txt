@@ -323,7 +323,7 @@ end;
 		loop
 			fetch e_cursor into v_ename, v_sal, v_deptno;
 			exit when e_cursor%notfound;
-			dbms_output.put_line('Empname: '|| v_ename || ' Sal: ' || v_sal || ' Deptno: ' || v_sal);
+			dbms_output.put_line('Empname: '|| v_ename || ' Sal: ' || v_sal || ' Deptno: ' || v_deptno);
 		end loop;
 		close e_cursor;
 	end;
@@ -341,7 +341,6 @@ end;
  
  
  
- select ename, sal, deptno from emp where sal in (select max(sal) from emp group by deptno);
  
  
  

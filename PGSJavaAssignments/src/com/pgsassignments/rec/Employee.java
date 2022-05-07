@@ -1,13 +1,12 @@
 package com.pgsassignments.rec;
 
 import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.Date;
 
 public class Employee implements Computation{
 	
 	//Data validation needs to be done
-	//UseEmployee class needs to be created
+	//UseEmployee class needs to be completed
 	
 	private int employeeID;
 	private String firstName;
@@ -110,9 +109,19 @@ public class Employee implements Computation{
 		this.salary = salary;
 	}
 	
+	@Override
+	public String toString() {
+		return "Employee [employeeID=" + employeeID + ", firstName=" + firstName + ", lastName=" + lastName
+				+ ", address=" + address + ", contactNo=" + contactNo + ", dateOfBirth=" + dateOfBirth + ", dateOfHire="
+				+ dateOfHire + ", deptId=" + deptId + ", salary=" + salary + "]";
+	}
+	
+	
+	
 	//************************************
 	// Custom methods
 	
+
 	public int calcExperience() {
 		LocalDate currDate = LocalDate.now();
 		LocalDate dateHired = LocalDate.parse((CharSequence) dateOfHire);

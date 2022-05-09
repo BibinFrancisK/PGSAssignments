@@ -1,9 +1,12 @@
+
+
 package com.pgsassignments.rec;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
 
-public class Employee implements Computation{
+public class Employee implements Computation, Serializable{
 	
 	//Data validation needs to be done
 	//UseEmployee class needs to be completed

@@ -347,11 +347,193 @@ end;
 	end;
 	
  
+12. 
+	declare
+	nRecordEmp emp%rowtype;
+	cursor e_cursor is
+		select * from emp;
+	begin
+		open e_cursor;
+		dbms_output.put_line('Empname '||'--'||' Comm ');
+		loop
+		fetch e_cursor into nRecordEmp;
+		exit when e_cursor%notfound;
+		if nRecordEmp.comm is not null then
+			dbms_output.put_line(nRecordEmp.ename || '--' || nRecordEmp.comm);
+		else
+			dbms_output.put_line(nRecordEmp.ename || '--' ||'Commission is NULL');
+		end if;
+		end loop;
+		close e_cursor;
+	end;	
+ 
+
+13.
+	declare
+	cursor e_cursor is
+		select e.ename ename, m.ename mname from emp e
+		join emp m on e.mgr = m.empno;
+	nRecordEmp e_cursor%rowtype;
+	v_ename nRecordEmp.ename%type;
+	v_mname nRecordEmp.mname%type;		
+	begin
+		dbms_output.put_line('Empname '||' -- '||' Manager ');
+		open e_cursor;
+		loop
+		fetch e_cursor into v_ename, v_mname;	
+		exit when e_cursor%notfound;
+		dbms_output.put_line(v_ename || ' -- ' || v_mname);
+		end loop;
+		close e_cursor;
+	end;
+	
+14.
+	declare
+	nRecordEmp emp%rowtype;
+	ex_comm_null exception;
+	pragma exception_init(ex_comm_null, -20002);
+	cursor e_cursor is
+		select * from emp where empno = 7369;
+	begin
+		open e_cursor;
+		dbms_output.put_line('Empname '||'--'||' Comm ');
+		loop
+		fetch e_cursor into nRecordEmp;
+		exit when e_cursor%notfound;
+		if nRecordEmp.comm is not null then
+			dbms_output.put_line(nRecordEmp.ename || '--' || nRecordEmp.comm);
+		else
+			raise ex_comm_null;
+		end if;
+		end loop;
+		close e_cursor;
+	exception
+		when ex_comm_null then dbms_output.put_line('Commission is NULL');
+	end;	
+	
+	
+15. *****************************************
+ 
+16. 
+	create or replace procedure dept_details as
+	nRecordDept dept%rowtype;
+	cursor d_cursor is
+	  select * from dept;
+	begin
+		dbms_output.put_line('Deptno '||'--'||' Deptname '||'--'||'Loc');
+		open d_cursor;
+		loop
+		fetch d_cursor into nRecordDept;
+		exit when d_cursor%notfound;
+		dbms_output.put_line(nRecordDept.deptno || '--' || nRecordDept.dname ||'--' || nRecordDept.loc);
+		end loop;
+		close d_cursor;
+	end dept_details;
+	
+ 
+17.
+	create or replace procedure emp_from_deptno(d_no IN number) as
+	cursor e_cursor is
+		select ename, deptno from emp where deptno = d_no;
+	nRecordEmp e_cursor%rowtype;
+	begin
+		dbms_output.put_line('Empname '||'--'|| 'Deptnum');
+		open e_cursor;
+		loop
+		fetch e_cursor into nRecordEmp;
+		exit when e_cursor%notfound;
+		dbms_output.put_line(nRecordEmp.ename ||' -- '||nRecordEmp.deptno);
+		end loop;
+		close e_cursor;
+	end emp_from_deptno;
+
+
+18.
+	create or replace procedure max_sal_emp_job as
+	cursor c_cursor is
+		select * from emp where sal in
+		(select max_sal from
+			(select max(sal) max_sal, job from emp group by job));
+	nRecord c_cursor%rowtype;
+	begin
+		dbms_output.put_line('Empno' ||'--'||'Ename'||'--'|| 'Job'||'--'|| 'Mgr' ||'--'||'Hiredate' ||'--'||'Sal' ||'--'||'Comm'||'--'|| 'Deptno');
+		open c_cursor;
+		loop
+		fetch c_cursor into nRecord;
+		exit when c_cursor%notfound;
+		dbms_output.put_line(nRecord.empno||'--'|| nRecord.ename||'--'|| nRecord.job||'--'|| nRecord.mgr||'--'|| nRecord.hiredate ||'--'||nRecord.sal ||'--'||nRecord.comm ||'--'||nRecord.deptno);
+		end loop;
+		close c_cursor;
+	end max_sal_emp_job;
+		
+	
+	
+19.
+	create or replace procedure find_ann_sal as
+	cursor c_cursor is
+		select ename, 12*sal ann_sal from emp;
+	nRecord c_cursor%rowtype;
+	begin
+		dbms_output.put_line('Ename'||'--'||'Annual Salary');
+		open c_cursor;
+		loop
+		fetch c_cursor into nRecord;
+		exit when c_cursor%notfound;
+		dbms_output.put_line(nRecord.ename || '--' || nRecord.ann_sal);
+		end loop;
+		close c_cursor;
+	end find_ann_sal;
+	
+	
+20.
+	create or replace function find_mgr(emp_name varchar2)
+	return varchar2 as
+	v_emp_name emp.ename%type;
+	v_mgr_name emp.ename%type;
+	begin
+			select e.ename ename, m.ename mname into v_emp_name, v_mgr_name from emp e
+			join emp m on e.mgr =  m.empno
+			where e.ename = emp_name;	
+			return v_mgr_name;
+	end find_mgr;
+
+	
+	variable mgr_name varchar2(10);
+	execute :mgr_name := find_mgr('SCOTT');
+	print mgr_name;
+
+	 
+ 
+21. **************************************************
+
+22. 
+
+alter table dept add sal number(10);
+ 
+create or replace trigger calc_salary
+	after insert or update or delete 
+	of  sal on emp
+	for each row
+	when (new.empno > 0)
+	begin
+		update dept set sal = sal + new.sal where deptno = new.deptno;
+	end;
+ /*NEED TO CROSS-CHECK. THIS MIGHT BE WRONG*/
  
  
+23.
+	create or replace trigger prev_empno_mod
+	before insert or update of empno on emp
+	for each row
+	begin
+		if: new.empno >=0 then
+		raise_application_error(-20004, 'Cannot change employee number');
+		else 
+		raise_application_error(-20005, 'Cannot change employee number');
+		end if;
+	end;
  
- 
- 
+ /*NEED TO CROSS-CHECK. THIS MIGHT BE WRONG*/
  
  
  

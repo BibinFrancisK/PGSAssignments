@@ -180,6 +180,24 @@ https://www.uvm.edu/~kdk/demobld.sql
 50. SELECT ename, sal FROM emp ORDER BY sal FETCH FIRST 3 ROWS ONLY;
 
 51. SELECT ename, job FROM emp WHERE deptno IN (SELECT deptno FROM dept WHERE loc <> 'CHICAGO');
+
+52. SELECT e.ename, d.dname FROM emp e
+		JOIN dept d ON (e.deptno = d.deptno)
+		WHERE e.deptno IN (
+		SELECT deptno FROM emp HAVING COUNT(ename) >= 3 GROUP BY deptno);
+
+
+53. SELECT ename, deptno FROM emp WHERE deptno = (
+		SELECT deptno FROM (
+			SELECT SUM(sal) sum_sal, deptno FROM emp 
+			GROUP BY deptno ORDER BY sum_sal DESC
+			FETCH FIRST 1 ROW ONLY));
+
+54. SELECT ename, deptno FROM emp WHERE sal IN(
+		SELECT MAX(sal) FROM emp
+		GROUP BY deptno);
+	
+	
 		
 ####################################################
 PL/ SQL

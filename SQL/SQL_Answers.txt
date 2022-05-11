@@ -562,3 +562,13 @@ set serveroutput on
 
 TNS: Transfer Network Subscript
 tnsnames.ora contains hostname, prt_number, SID etc.
+
+
+
+CREATE TABLE Employee(
+	ecode number(4) PRIMARY KEY,
+	ename VARCHAR2(20) NOT NULL,
+	designation VARCHAR2(4) NOT NULL,
+	age number(2) NOT NULL,
+	basic_pay decimal(8,2) NOT NULL
+);

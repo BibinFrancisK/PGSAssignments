@@ -9,6 +9,6 @@ public interface EmployeeDAO {
 	public boolean updateEmployee(Employee employee);
 	public boolean deleteEmployee(int ecode);
 	public List<Employee> getAllEmployees();
-	public float getTotalSalary();
+	public double getTotalSalary(double basicSal);
 
 }

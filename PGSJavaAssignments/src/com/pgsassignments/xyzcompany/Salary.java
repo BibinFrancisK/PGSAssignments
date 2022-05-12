@@ -19,11 +19,14 @@ public class Salary {
 	public void setBasic(double basic) {
 		this.basic = basic;
 	}
+	
 
-	public double computeSalary(/* int ecode */) {
+	public double getDa() {
+		return da;
+	}
 
-		// TO-DO
-		return 0;
+	public double getHra() {
+		return hra;
 	}
 
 	@Override

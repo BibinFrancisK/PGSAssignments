@@ -572,3 +572,21 @@ CREATE TABLE Employee(
 	age number(2) NOT NULL,
 	basic_pay decimal(8,2) NOT NULL
 );
+
+
+
+CREATE TABLE employeeLog(
+	ecode number(4) PRIMARY KEY,
+	ename VARCHAR2(20) NOT NULL,
+	designation VARCHAR2(4) NOT NULL,
+	last_sal decimal(8,2) NOT NULL,
+	leave_date date NOT NULL
+);
+
+
+update employee set 
+	ename = 'John',
+	designation = 'SSE',
+	age = '56',
+	basic_pay = 15679
+	where ecode = 1002;

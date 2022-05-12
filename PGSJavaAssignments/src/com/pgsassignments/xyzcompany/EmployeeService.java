@@ -19,19 +19,6 @@ public class EmployeeService implements EmployeeDAO {
 			Connection con = ods.getConnection();
 			return con;		
 
-//			Connection con = null;
-//			try {
-//				con = ods.getConnection();
-//				Statement stmt = con.createStatement();
-//				ResultSet rs = stmt.executeQuery("select * from employee");
-//				while (rs.next())
-//					System.out.println(rs.getInt(1) + "  " + rs.getString(2) + "  " + rs.getString(3));
-//			} catch (SQLException e) {
-//				System.out.println(e);
-//			} finally {
-//				con.close();
-//			}
-
 	}
 
 	@Override
@@ -53,13 +40,55 @@ public class EmployeeService implements EmployeeDAO {
 
 	@Override
 	public float getMonthlySalary(int ecode) {
-		// TODO Auto-generated method stub
+		try {
+			PreparedStatement stmt = DBConection()
+					.prepareStatement("select ename, basic_pay from employee where ecode = ?");
+			stmt.setInt(1, ecode);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				System.out.println("The total salary of " + rs.getString(1) +" :" );
+				Salary empSal = new Salary(rs.getDouble(2));
+				double totSal = getTotalSalary(empSal.getBasic());
+				System.out.println("Basic: " + empSal.getBasic() + " + DA: " 
+							+ empSal.getDa() + " + HRA: " + empSal.getHra() + " = " + totSal);			
+			}		
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
 		return 0;
 	}
 
 	@Override
 	public boolean updateEmployee(Employee employee) {
-		// TODO Auto-generated method stub
+		Connection con = null;
+		
+		try {
+			con = DBConection();
+			con.setAutoCommit(true);
+			PreparedStatement stmt1 = 
+					con.prepareStatement("update employee set ename = ?, designation = ?, age = ? , basic_pay = ? where ecode = ?");
+
+			stmt1.setString(1, employee.getEname());
+			stmt1.setString(2, employee.getDesignation());
+			stmt1.setInt(3, employee.getAge());
+			stmt1.setDouble(4,employee.getSalary().getBasic());
+			stmt1.setInt(5, employee.getEcode());
+			
+			int i = stmt1.executeUpdate();
+			if(i == 1) return true; 	
+		}
+		
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				con.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 		return false;
 	}
 
@@ -75,10 +104,10 @@ public class EmployeeService implements EmployeeDAO {
 			Statement stmt = DBConection().createStatement();
 			ResultSet rs = stmt.executeQuery("select * from employee");
 			System.out.println("CODE--" + "NAME--" 
-					+ "DESN.--" + "AGE--" + "B_SAL");
+					+ "DESN.--" + "AGE--" + "TOT_SAL");
 			while (rs.next())
 				System.out.println(rs.getInt(1) + "--" + rs.getString(2) + "--" 
-									+ rs.getString(3) + "--" + rs.getInt(4) + "--" + rs.getDouble(5));
+									+ rs.getString(3) + "--" + rs.getInt(4) + "--" + getTotalSalary(rs.getDouble(5)));
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -87,9 +116,9 @@ public class EmployeeService implements EmployeeDAO {
 	}
 
 	@Override
-	public float getTotalSalary() {
-		// TODO Auto-generated method stub
-		return 0;
+	public double getTotalSalary(double basicSal) {	
+		Salary salary = new Salary(basicSal);
+		return (salary.getBasic() + salary.getDa() + salary.getHra());
 	}
 
 }

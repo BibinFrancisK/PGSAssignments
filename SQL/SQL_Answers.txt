@@ -590,3 +590,39 @@ update employee set
 	age = '56',
 	basic_pay = 15679
 	where ecode = 1002;
+	
+	
+
+CREATE TABLE BookDetail(
+	bookid NUMBER(4) PRIMARY KEY,
+	name VARCHAR2(20) NOT NULL,
+	author VARCHAR2(20) NOT NULL,
+	descr VARCHAR2(50) NOT NULL,
+	price number(6,2) NOT NULL
+	);
+	
+
+INSERT INTO BookDetail VALUES(
+	1001,
+	'The Vintage Book',
+	'J. D. McClatchy',
+	'Some description',
+	800.00
+);
+
+INSERT INTO BookDetail VALUES(
+	1002,
+	'Harry Potter and TPS',
+	'J. K. Rowling',
+	'Some description',
+	1800.00
+);
+
+
+INSERT INTO BookDetail VALUES(
+	1003,
+	'Wuthering Heights',
+	'Emily Bronte',
+	'Some description',
+	1200.00
+);

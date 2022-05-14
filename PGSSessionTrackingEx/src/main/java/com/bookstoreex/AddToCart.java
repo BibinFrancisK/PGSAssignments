@@ -32,20 +32,18 @@ public class AddToCart extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
+		//PrintWriter out = response.getWriter();
 		HttpSession session = request.getSession();
 		ArrayList<Book> cart = (ArrayList<Book>)session.getAttribute("cart");
 		ArrayList<Book> books = (ArrayList<Book>)session.getAttribute("books");
 		int bookid = Integer.parseInt(request.getParameter("bookid"));
-		//int items = (int) session.getAttribute("items");
 		for(Book book : books) {
 			if(book.getBookId() == bookid)
 				cart.add(book);	
-				//items++;
+			//out.println("<SCRIPT>alert(\"Successfully added to cart!\")</SCRIPT>");
 		}
-		
-//		PrintWriter out = response.getWriter();
-//		out.println("Success");
 		getServletContext().getRequestDispatcher("/Catalog").forward(request, response);
+		
 	}
 
 	/**

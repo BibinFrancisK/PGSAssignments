@@ -2,7 +2,6 @@ package com.bookstoreex;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,16 +11,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class ShowCart
+ * Servlet implementation class Cashier
  */
-@WebServlet("/ShowCart")
-public class ShowCart extends HttpServlet {
+@WebServlet("/Cashier")
+public class Cashier extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ShowCart() {
+    public Cashier() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -32,47 +31,27 @@ public class ShowCart extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		response.setContentType("text/html");
 		HttpSession session = request.getSession();
+		double totalPrice = (double)session.getAttribute("totalPrice");
+		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
-		ArrayList<Book> cart = (ArrayList<Book>)session.getAttribute("cart");
-		if(cart.isEmpty()) {
-			out.println("<H3>You have nothing in your cart!</H3>");
-			out.println("<A HREF="+request.getContextPath()+"/Catalog>See catalog</A>");}
-		else {
-		double totalPrice = 0.0;
-		//out.println(cart);
 		out.println("<HTML><HEAD><TITLE>");
 		out.println("Duke's Bookstore");
 		out.println("</TITLE></HEAD>");
 		out.println("<BODY>");
-		out.println("<H2>Items in Cart</H2>");
-		out.println("<TABLE BORDER=1>");
-		out.println("<TR><TH>Book ID</TH><TH>Name</TH><TH>Price</TH><TH>Remove</TH></TR>");
-		for(Book book : cart) {
-			out.println("<TR>");
-			out.print("<TD>"+book.getBookId()+"</TD>"+
-						"<TD>"+book.getBookName()+"</TD>"+
-						"<TD>"+book.getPrice()+"</TD>"+
-						"<TD><A HREF="+request.getContextPath()+"/RemoveFromCart?bookid="+book.getBookId()+">Remove item</A></TD>"
-						);
-			out.println("</TR>");
-			totalPrice += book.getPrice();
-		}
-		out.println("</TABLE>");
+		out.println("<H2>Payment</H2>");
+		out.println("Your total price is: "+ totalPrice);
+		out.println("<FORM METHOD=\"POST\" ACTION=" + request.getContextPath() +"/ThankYou>");
+		out.println("<P>Enter your name: </P>");
+		out.println("<INPUT TYPE=\"TEXT\">");
+		out.println("<P>Enter your credit card number: </P>");
+		out.println("<INPUT TYPE=\"NUMBER\">");
 		out.println("<BR>");
-		
-		out.println("<P>The total price is: " + totalPrice + "</P>");
-		session.setAttribute("totalPrice", totalPrice);
-		out.println("<A HREF="+request.getContextPath()+"/Catalog>See catalog</A>");
 		out.println("<BR>");
-		out.println("<A HREF="+request.getContextPath()+"/RemoveAll>Clear cart</A>");
-		out.println("<BR>");
-		out.println("<A HREF="+request.getContextPath()+"/Cashier>Checkout</A>");
+		out.println("<BUTTON TYPE=\"SUBMIT\">Make Payment</BUTTON>");
+		out.println("</FORM>");
 		out.println("</BODY>");
 		out.println("</HTML>");
-		}
-
 	}
 
 	/**

@@ -1,6 +1,8 @@
 package com.bookstoreex;
 
-public class Book {
+import java.io.Serializable;
+
+public class Book implements Serializable{
 	
 	private int bookId;
 	private String bookName;

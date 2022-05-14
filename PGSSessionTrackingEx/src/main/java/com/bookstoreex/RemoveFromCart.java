@@ -1,10 +1,9 @@
 package com.bookstoreex;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.List;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,16 +12,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class Store
+ * Servlet implementation class RemoveFromCart
  */
-@WebServlet("/Store")
-public class Store extends HttpServlet {
+@WebServlet("/RemoveFromCart")
+public class RemoveFromCart extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Store() {
+    public RemoveFromCart() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -34,27 +33,17 @@ public class Store extends HttpServlet {
 		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
 		
-		HttpSession session = request.getSession(true);
-		session.setAttribute("cart", new ArrayList<Book>());	
+		HttpSession session = request.getSession();
+		ArrayList<Book> cart = (ArrayList<Book>)session.getAttribute("cart");
+		ArrayList<Book> booksToRemove = new ArrayList<Book>();
+		int bookid = Integer.parseInt(request.getParameter("bookid"));
+		for(Book book : cart) {
+			if(book.getBookId() == bookid)
+				booksToRemove.add(book);	
+		}
+		cart.removeAll(booksToRemove);
+		getServletContext().getRequestDispatcher("/ShowCart").forward(request, response);
 		
-		
-		PrintWriter out = response.getWriter();
-		response.setContentType("text/html");
-		out.println("<HTML><HEAD><TITLE>");
-		out.println("Duke's Bookstore");
-		out.println("</TITLE></HEAD>");
-		out.println("<BODY>");
-		out.println("<H2>Welcome to Duke's Bookstore</H2>");
-		out.println("<Please select an option.>");
-		out.println("<ul>");
-		out.println("<li><a href="+request.getContextPath()+"/Catalog>Catalog</a></li>");
-		out.println("<li><A HREF="+request.getContextPath()+"/ShowCart>Shopping cart</A></li>");
-		out.println("<li><a href=\"#\">Buy your books</a></li>");
-		out.println("</ul>");
-		out.println("</BODY>");
-		out.println("</HTML>");
-		
-		//System.out.println(request.getContextPath());
 	}
 
 	/**

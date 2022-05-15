@@ -2,7 +2,7 @@ package com.pgsassignments.rec;
 
 import java.util.Scanner;
 
-public class CelsiusFahrenheitConv {
+public class CelsiusFarenheitConverter {
 
 	public static void main(String[] args) {
 		

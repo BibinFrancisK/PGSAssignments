@@ -2,7 +2,8 @@ package com.bookstoreex;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -35,7 +36,13 @@ public class ShowCart extends HttpServlet {
 		response.setContentType("text/html");
 		HttpSession session = request.getSession();
 		PrintWriter out = response.getWriter();
+		Integer qty = 0;
+		Double price = 0.0;
+		
 		ArrayList<Book> cart = (ArrayList<Book>)session.getAttribute("cart");
+		HashMap<Integer, Integer> bookMap = (HashMap<Integer, Integer>) session.getAttribute("bookMap");
+			
+	
 		if(cart.isEmpty()) {
 			out.println("<H3>You have nothing in your cart!</H3>");
 			out.println("<A HREF="+request.getContextPath()+"/Catalog>See catalog</A>");}
@@ -48,11 +55,15 @@ public class ShowCart extends HttpServlet {
 		out.println("<BODY>");
 		out.println("<H2>Items in Cart</H2>");
 		out.println("<TABLE BORDER=1>");
-		out.println("<TR><TH>Book ID</TH><TH>Name</TH><TH>Price</TH><TH>Remove</TH></TR>");
+		out.println("<TR><TH>Book ID</TH><TH>Name</TH><TH>Qty</TH><TH>Price</TH><TH>Remove</TH></TR>");
+		List<Book> bookDistinct = cart.stream().distinct().collect(Collectors.toList());
 		for(Book book : cart) {
+			//qty = bookMap.get(book.getBookId());
+			//price = book.getPrice() * qty;
 			out.println("<TR>");
 			out.print("<TD>"+book.getBookId()+"</TD>"+
 						"<TD>"+book.getBookName()+"</TD>"+
+						"<TD>"+1+"</TD>"+
 						"<TD>"+book.getPrice()+"</TD>"+
 						"<TD><A HREF="+request.getContextPath()+"/RemoveFromCart?bookid="+book.getBookId()+">Remove item</A></TD>"
 						);
@@ -68,7 +79,7 @@ public class ShowCart extends HttpServlet {
 		out.println("<BR>");
 		out.println("<A HREF="+request.getContextPath()+"/RemoveAll>Clear cart</A>");
 		out.println("<BR>");
-		out.println("<A HREF="+request.getContextPath()+"/Cashier>Checkout</A>");
+		out.println("<A HREF="+request.getContextPath()+"/Cashier>Buy books</A>");
 		out.println("</BODY>");
 		out.println("</HTML>");
 		}

@@ -2,6 +2,7 @@ package com.bookstoreex;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -32,9 +33,15 @@ public class Cashier extends HttpServlet {
 		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
 		HttpSession session = request.getSession();
-		double totalPrice = (double)session.getAttribute("totalPrice");
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
+		ArrayList<Book> cart = (ArrayList<Book>)session.getAttribute("cart");
+		if(cart.isEmpty()) {
+			out.println("<H3>You have nothing in your cart!</H3>");
+			out.println("<A HREF="+request.getContextPath()+"/Catalog>See catalog</A>");}
+		else {
+		double totalPrice = (double)session.getAttribute("totalPrice");
+		
 		out.println("<HTML><HEAD><TITLE>");
 		out.println("Duke's Bookstore");
 		out.println("</TITLE></HEAD>");
@@ -43,15 +50,16 @@ public class Cashier extends HttpServlet {
 		out.println("Your total price is: "+ totalPrice);
 		out.println("<FORM METHOD=\"POST\" ACTION=" + request.getContextPath() +"/ThankYou>");
 		out.println("<P>Enter your name: </P>");
-		out.println("<INPUT TYPE=\"TEXT\">");
+		out.println("<INPUT TYPE=\"TEXT\" REQUIRED>");
 		out.println("<P>Enter your credit card number: </P>");
-		out.println("<INPUT TYPE=\"NUMBER\">");
+		out.println("<INPUT TYPE=\"NUMBER\" REQUIRED>");
 		out.println("<BR>");
 		out.println("<BR>");
 		out.println("<BUTTON TYPE=\"SUBMIT\">Make Payment</BUTTON>");
 		out.println("</FORM>");
 		out.println("</BODY>");
 		out.println("</HTML>");
+		}
 	}
 
 	/**

@@ -43,13 +43,13 @@ public class Store extends HttpServlet {
 		out.println("<HTML><HEAD><TITLE>");
 		out.println("Duke's Bookstore");
 		out.println("</TITLE></HEAD>");
-		out.println("<BODY>");
+		out.println("<BODY");
 		out.println("<H2>Welcome to Duke's Bookstore</H2>");
 		out.println("<Please select an option.>");
 		out.println("<ul>");
 		out.println("<li><a href="+request.getContextPath()+"/Catalog>Catalog</a></li>");
 		out.println("<li><A HREF="+request.getContextPath()+"/ShowCart>Shopping cart</A></li>");
-		out.println("<li><a href=\"#\">Buy your books</a></li>");
+		out.println("<li><A HREF="+request.getContextPath()+"/Cashier>Buy your books</a></li>");
 		out.println("</ul>");
 		out.println("</BODY>");
 		out.println("</HTML>");
@@ -64,5 +64,7 @@ public class Store extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
+	
+	
 
 }

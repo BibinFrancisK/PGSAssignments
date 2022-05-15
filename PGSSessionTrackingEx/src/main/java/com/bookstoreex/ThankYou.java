@@ -2,6 +2,7 @@ package com.bookstoreex;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -32,8 +33,18 @@ public class ThankYou extends HttpServlet {
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
+		out.println("<HTML><HEAD><TITLE>");
+		out.println("Duke's Bookstore");
+		out.println("</TITLE>");
+		out.println("</HEAD>");
+		out.println("<BODY>");
 		out.println("<H3>Thank You!</H3>");
+		out.println("<P>Please wait... You will be redirected to store...</P>");
+		out.println("</BODY>");
+		out.println("</HTML>");
+		response.setHeader("Refresh", "5; URL=" + request.getContextPath() + "/Store");
 	}
+	
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)

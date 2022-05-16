@@ -33,22 +33,28 @@ public class ShowCart extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
+		Integer qty = 0;
+		Double price = 0.0;
 		response.setContentType("text/html");
 		HttpSession session = request.getSession();
 		PrintWriter out = response.getWriter();
-		Integer qty = 0;
-		Double price = 0.0;
-		
+
 		ArrayList<Book> cart = (ArrayList<Book>)session.getAttribute("cart");
-		HashMap<Integer, Integer> bookMap = (HashMap<Integer, Integer>) session.getAttribute("bookMap");
-			
-	
+		HashMap<Integer, Integer> bookMap = new HashMap<Integer, Integer>();
+		for(Book book : cart) {
+			if(bookMap.containsKey(book.getBookId()))
+				bookMap.put(book.getBookId(), bookMap.get(book.getBookId())+1);
+			else
+				bookMap.put(book.getBookId(), 1);
+		}
+		List<Book> distinctBooks = cart.stream()
+						                .distinct()
+						                .collect(Collectors.toList());
 		if(cart.isEmpty()) {
 			out.println("<H3>You have nothing in your cart!</H3>");
-			out.println("<A HREF="+request.getContextPath()+"/Catalog>See catalog</A>");}
+			out.println("<A HREF="+request.getContextPath()+"/Store>See store</A>");}
 		else {
 		double totalPrice = 0.0;
-		//out.println(cart);
 		out.println("<HTML><HEAD><TITLE>");
 		out.println("Duke's Bookstore");
 		out.println("</TITLE></HEAD>");
@@ -56,19 +62,19 @@ public class ShowCart extends HttpServlet {
 		out.println("<H2>Items in Cart</H2>");
 		out.println("<TABLE BORDER=1>");
 		out.println("<TR><TH>Book ID</TH><TH>Name</TH><TH>Qty</TH><TH>Price</TH><TH>Remove</TH></TR>");
-		List<Book> bookDistinct = cart.stream().distinct().collect(Collectors.toList());
-		for(Book book : cart) {
-			//qty = bookMap.get(book.getBookId());
-			//price = book.getPrice() * qty;
+		
+		for(Book book : distinctBooks) {
+			qty = bookMap.get(book.getBookId());
+			price = book.getPrice() * qty;
 			out.println("<TR>");
 			out.print("<TD>"+book.getBookId()+"</TD>"+
 						"<TD>"+book.getBookName()+"</TD>"+
-						"<TD>"+1+"</TD>"+
+						"<TD>"+qty+"</TD>"+
 						"<TD>"+book.getPrice()+"</TD>"+
 						"<TD><A HREF="+request.getContextPath()+"/RemoveFromCart?bookid="+book.getBookId()+">Remove item</A></TD>"
 						);
 			out.println("</TR>");
-			totalPrice += book.getPrice();
+			totalPrice += price;
 		}
 		out.println("</TABLE>");
 		out.println("<BR>");

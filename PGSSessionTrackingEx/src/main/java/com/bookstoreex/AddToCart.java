@@ -37,20 +37,13 @@ public class AddToCart extends HttpServlet {
 		HttpSession session = request.getSession();
 		ArrayList<Book> cart = (ArrayList<Book>)session.getAttribute("cart");
 		ArrayList<Book> books = (ArrayList<Book>)session.getAttribute("books");
-		HashMap<Integer, Integer> bookMap = new HashMap<Integer, Integer>();
-		session.setAttribute("bookMap",bookMap);
 		Integer bookid = Integer.parseInt(request.getParameter("bookid"));
 		
 		for(Book book : books) {
-			if(book.getBookId() == bookid) {
+			if(book.getBookId() == bookid) 
 				cart.add(book);	
-				if(bookMap.containsKey(bookid))
-					bookMap.put(bookid, (bookMap.get(bookid))+1);
-				else
-					bookMap.put(bookid, 1);
-		}}
+		}
 		
-		//System.out.println(bookMap);
 		getServletContext().getRequestDispatcher("/Catalog").forward(request, response);
 		
 		

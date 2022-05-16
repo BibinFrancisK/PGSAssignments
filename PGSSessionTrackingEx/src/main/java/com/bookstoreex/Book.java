@@ -1,6 +1,7 @@
 package com.bookstoreex;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Book implements Serializable{
 	
@@ -11,8 +12,7 @@ public class Book implements Serializable{
 	private double price;
 	
 	public Book() {
-		//super();
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public int getBookId() {
@@ -59,6 +59,23 @@ public class Book implements Serializable{
 	public String toString() {
 		return "Book [bookId=" + bookId + ", bookName=" + bookName + ", author=" + author + ", desc=" + desc
 				+ ", price=" + price + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(bookId);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Book other = (Book) obj;
+		return bookId == other.bookId;
 	}
 	
 	

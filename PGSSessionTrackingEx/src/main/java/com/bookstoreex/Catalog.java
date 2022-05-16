@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -49,11 +50,9 @@ public class Catalog extends HttpServlet {
 			Context ic = new InitialContext();
 			DataSource dso = (DataSource)ic.lookup("java:comp/env/jdbc/myoracle");
 			conn = null;
-			//int items = 0;
 			HttpSession session = request.getSession();
 			ArrayList<Book> books = new ArrayList<Book>();
 			session.setAttribute("books", books);
-			//session.setAttribute("items", items);
 			conn = dso.getConnection();
 			Statement so = conn.createStatement();
 			ResultSet rso = so.executeQuery(query);
@@ -89,8 +88,6 @@ public class Catalog extends HttpServlet {
 			}
 			out.println("</TABLE>");
 			out.println("<BR>");
-			//int itemno = (int) session.getAttribute("items");
-			//out.println("Current items: " + itemno);
 			out.println("<A HREF="+request.getContextPath()+"/ShowCart>Show cart</A>");
 			out.println("</BODY>");
 			out.println("</HTML>");

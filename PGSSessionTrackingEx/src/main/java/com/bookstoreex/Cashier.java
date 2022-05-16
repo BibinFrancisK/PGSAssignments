@@ -38,7 +38,7 @@ public class Cashier extends HttpServlet {
 		ArrayList<Book> cart = (ArrayList<Book>)session.getAttribute("cart");
 		if(cart.isEmpty()) {
 			out.println("<H3>You have nothing in your cart!</H3>");
-			out.println("<A HREF="+request.getContextPath()+"/Catalog>See catalog</A>");}
+			out.println("<A HREF="+request.getContextPath()+"/Store>See store</A>");}
 		else {
 		double totalPrice = (double)session.getAttribute("totalPrice");
 		
@@ -50,7 +50,7 @@ public class Cashier extends HttpServlet {
 		out.println("Your total price is: "+ totalPrice);
 		out.println("<FORM METHOD=\"POST\" ACTION=" + request.getContextPath() +"/ThankYou>");
 		out.println("<P>Enter your name: </P>");
-		out.println("<INPUT TYPE=\"TEXT\" REQUIRED>");
+		out.println("<INPUT TYPE=\"TEXT\" NAME=\"custName\" REQUIRED>");
 		out.println("<P>Enter your credit card number: </P>");
 		out.println("<INPUT TYPE=\"NUMBER\" REQUIRED>");
 		out.println("<BR>");

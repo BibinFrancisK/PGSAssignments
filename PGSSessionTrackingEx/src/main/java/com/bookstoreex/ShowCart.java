@@ -61,7 +61,7 @@ public class ShowCart extends HttpServlet {
 		out.println("<BODY>");
 		out.println("<H2>Items in Cart</H2>");
 		out.println("<TABLE BORDER=1>");
-		out.println("<TR><TH>Book ID</TH><TH>Name</TH><TH>Qty</TH><TH>Price</TH><TH>Remove</TH></TR>");
+		out.println("<TR><TH>Book ID</TH><TH>Name</TH><TH>Qty</TH><TH>Unit Price</TH><TH>Remove</TH></TR>");
 		
 		for(Book book : distinctBooks) {
 			qty = bookMap.get(book.getBookId());

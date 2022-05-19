@@ -94,7 +94,7 @@ public class EmployeeService implements EmployeeDAO {
 
 	@Override
 	public boolean deleteEmployee(int ecode) {
-		// TODO Auto-generated method stub
+		// Refer MyBatis Example
 		return false;
 	}
 

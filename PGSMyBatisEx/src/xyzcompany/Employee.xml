@@ -1,9 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper
-	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="Employee">
+
+<insert id="insertEmp" parameterType="xyzcompany.Employee">
+	INSERT INTO Employee VALUES
+	(#{ecode}, #{ename}, #{designation}, #{age}, #{basic_pay})
+</insert>
+
+<select id="getEmpPay" parameterType="int" resultMap="result">
+SELECT * FROM Employee WHERE ecode = #{ecode}
+</select>
+
+<update id="updateEmp" parameterType="xyzcompany.Employee">
+UPDATE Employee
+ SET ename = #{ename}, designation = #{designation}, age = #{age}, basic_pay = #{basic_pay}
+ 	WHERE ecode = #{ecode}
+</update>
+
+<delete id="deleteEmp" parameterType="xyzcompany.Employee">
+DELETE FROM Employee
+	WHERE ecode = #{ecode}
+</delete>
 
 <select id="getAll" resultMap="result">
 SELECT * FROM Employee

@@ -12,9 +12,9 @@ public class UseEmployee {
 		System.out.println("EMPLOYEE MANAGEMENT SYSTEM");
 		System.out.println("--------------------------");
 		System.out.println("Enter your choice: ");
-		System.out.println("1. Add a new employee"); 
-		System.out.println("2. Calculate monthly salary"); 
-		System.out.println("3. Update employee record"); 
+		System.out.println("1. Add a new employee"); //DONE
+		System.out.println("2. Calculate monthly salary");  //DONE
+		System.out.println("3. Update employee record"); //DONE
 		System.out.println("4. Delete employee record"); //NEED TO ADD TO EMP LOG, PROCEDURE?
 		System.out.println("5. List employees along with total salary"); //DONE
 		
@@ -58,7 +58,7 @@ public class UseEmployee {
 				
 				System.out.print("Enter employee basic salary :");
 				float salary = scanner.nextFloat();
-				if(salary >= 6000) emp.setSalary(new Salary(salary));	
+				if(salary >= 6000) emp.setBasic_pay(salary);	
 				else { System.out.println("Minimum salary is 6000"); System.exit(0); }
 				}
 				catch(Exception e) { System.out.println("Oops! An error occured\n" + e.getMessage());}
@@ -115,7 +115,11 @@ public class UseEmployee {
 			break;
 			
 		case 4:
-			//TBD
+			System.out.println("Enter the e-code of the employee");
+			int empCode = scanner.nextInt();
+			boolean isDeleted = service.deleteEmployee(empCode);
+			if(isDeleted) System.out.println("Employee updated successfully!");
+			else { System.out.println("Unable to update employee!"); }		
 			break;
 			
 		case 5:

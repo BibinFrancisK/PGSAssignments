@@ -626,3 +626,41 @@ INSERT INTO BookDetail VALUES(
 	'Some description',
 	1200.00
 );
+
+
+##############
+
+CREATE TABLE employeeLog(
+	ecode NUMBER(4),
+	ename VARCHAR2(20),
+	designation VARCHAR2(4),
+	last_sal NUMBER(8,2),
+	leaving_date DATE
+);
+
+
+
+
+CREATE OR REPLACE TRIGGER employee_before_delete
+BEFORE DELETE
+   ON Employee
+   FOR EACH ROW
+DECLARE
+   my_code NUMBER;
+   my_errm VARCHAR2(32000);
+BEGIN
+   INSERT INTO employeeLog 
+   VALUES
+   ( :old.ecode,
+     :old.ename,
+     :old.designation,
+     :old.basic_pay,
+     sysdate
+	  );
+	commit;
+EXCEPTION
+    WHEN OTHERS THEN
+      my_code := SQLCODE;
+      my_errm := SQLERRM;
+	dbms_output.put_line('Error code ' || my_code || ': ' || my_errm);
+END;

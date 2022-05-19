@@ -27,7 +27,6 @@ public class EmployeeService implements EmployeeDAO {
     	try {
 			reader = Resources.getResourceAsReader("SqlMapConfig.xml");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     	sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -36,78 +35,65 @@ public class EmployeeService implements EmployeeDAO {
 
 	@Override
 	public boolean addEmployee(Employee employee) {
-		try {
-			PreparedStatement stmt=DBConection().prepareStatement("insert into Employee values(?,?,?,?,?)");  
-			stmt.setInt(1, employee.getEcode());
-			stmt.setString(2, employee.getEname());
-			stmt.setString(3, employee.getDesignation());
-			stmt.setInt(4, employee.getAge());
-			stmt.setDouble(5, employee.getSalary().getBasic());
-			int i = stmt.executeUpdate();  
-			if(i == 1) return true; 	
-			} catch (SQLException e) {
-				System.out.println(e);
-			} 
-			return false;
+		try{
+			SqlSession sqlSession = DBConection().openSession();
+			sqlSession.insert("Employee.insertEmp", employee);
+			sqlSession.commit();
+			return true;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}			
+		return false;
+
 	}
 
 	@Override
 	public float getMonthlySalary(int ecode) {
 		try {
-			PreparedStatement stmt = DBConection()
-					.prepareStatement("select ename, basic_pay from employee where ecode = ?");
-			stmt.setInt(1, ecode);
-			ResultSet rs = stmt.executeQuery();
-			while (rs.next()) {
-				System.out.println("The total salary of " + rs.getString(1) +" :" );
-				Salary empSal = new Salary(rs.getDouble(2));
-				double totSal = getTotalSalary(empSal.getBasic());
-				System.out.println("Basic: " + empSal.getBasic() + " + DA: " 
-							+ empSal.getDa() + " + HRA: " + empSal.getHra() + " = " + totSal);			
-			}		
+			SqlSession sqlSession = DBConection().openSession();
+			Employee employee = sqlSession.selectOne("Employee.getEmpPay", ecode);
+			System.out.println("The total salary of " + employee.getEname() +" :" );
+			Salary empSal = new Salary(employee.getBasic_pay());
+			double totSal = getTotalSalary(empSal.getBasic());
+			System.out.println("Basic: " + empSal.getBasic() + " + DA: " 
+					+ empSal.getDa() + " + HRA: " + empSal.getHra() + " = " + totSal);	
+		
 		}
-		catch(SQLException e){
+		catch(Exception e){
 			e.printStackTrace();
 		}
 		return 0;
 	}
 
 	@Override
-	public boolean updateEmployee(Employee employee) {
-		Connection con = null;
-		
+	public boolean updateEmployee(Employee employee) {		
 		try {
-			con = DBConection();
-			con.setAutoCommit(true);
-			PreparedStatement stmt1 = 
-					con.prepareStatement("update employee set ename = ?, designation = ?, age = ? , basic_pay = ? where ecode = ?");
-
-			stmt1.setString(1, employee.getEname());
-			stmt1.setString(2, employee.getDesignation());
-			stmt1.setInt(3, employee.getAge());
-			stmt1.setDouble(4,employee.getSalary().getBasic());
-			stmt1.setInt(5, employee.getEcode());
-			
-			int i = stmt1.executeUpdate();
-			if(i == 1) return true; 	
+			SqlSession sqlSession = DBConection().openSession();
+			int i = sqlSession.update("Employee.updateEmp", employee);
+			sqlSession.commit();
+			if(i == 1) return true; 		
 		}
 		
-		catch (SQLException e) {
+		catch (Exception e) {
 			e.printStackTrace();
-		}
-		finally {
-			try {
-				con.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 		}
 		return false;
 	}
 
 	@Override
 	public boolean deleteEmployee(int ecode) {
-		// TODO Auto-generated method stub
+		try {
+			SqlSession sqlSession = DBConection().openSession();
+			int i = sqlSession.delete("Employee.deleteEmp", ecode);
+			sqlSession.commit();
+			if(i == 1) return true; 		
+		}
+		
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+			
 		return false;
 	}
 

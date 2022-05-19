@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Employee">
+
+<select id="getAll" resultMap="result">
+SELECT * FROM Employee
+</select>
+
+<resultMap id="result" type="xyzcompany.Employee">
+	<result property="ecode" column="ecode" />
+	<result property="ename" column="ename" />
+	<result property="designation" column="designation" />
+	<result property="age" column="age" />
+	<result property="basic_pay" column="basic_pay" />
+</resultMap>
+
+</mapper>

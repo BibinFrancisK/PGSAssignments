@@ -15,7 +15,7 @@ public class UseEmployee {
 		System.out.println("1. Add a new employee"); //DONE
 		System.out.println("2. Calculate monthly salary");  //DONE
 		System.out.println("3. Update employee record"); //DONE
-		System.out.println("4. Delete employee record"); //NEED TO ADD TO EMP LOG, PROCEDURE?
+		System.out.println("4. Delete employee record"); //DONE USING TRIGGER
 		System.out.println("5. List employees along with total salary"); //DONE
 		
 		try {
